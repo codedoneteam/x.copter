@@ -1,0 +1,2 @@
+class CopterError(Exception):
+    pass
