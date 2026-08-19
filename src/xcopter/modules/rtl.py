@@ -1,5 +1,5 @@
-from pymavlink import mavutil
 import asyncio
+from ..mavlink import mavlink
 from .log import Log
 from .errors.error import CopterError
 
@@ -18,7 +18,7 @@ class Rtl(Log):
                 self.master.target_component,
                 b'WPNAV_SPEED',
                 int(speed * 100),
-                mavutil.mavlink.MAV_PARAM_TYPE_REAL32
+                mavlink.MAV_PARAM_TYPE_REAL32
             )
 
             # Climb speed
@@ -27,7 +27,7 @@ class Rtl(Log):
                 self.master.target_component,
                 b'WPNAV_SPEED_UP',
                 int(climb * 100),
-                mavutil.mavlink.MAV_PARAM_TYPE_REAL32
+                mavlink.MAV_PARAM_TYPE_REAL32
             )
 
             # Descent speed
@@ -36,7 +36,7 @@ class Rtl(Log):
                 self.master.target_component,
                 b'WPNAV_SPEED_DN',
                 int(descend * 100),
-                mavutil.mavlink.MAV_PARAM_TYPE_REAL32
+                mavlink.MAV_PARAM_TYPE_REAL32
             )
 
             # Final landing speed
@@ -45,7 +45,7 @@ class Rtl(Log):
                 self.master.target_component,
                 b'LAND_SPEED',
                 int(land * 100),
-                mavutil.mavlink.MAV_PARAM_TYPE_REAL32
+                mavlink.MAV_PARAM_TYPE_REAL32
             )
 
             # Vertical acceleration (speed up / slow down on Z)
@@ -54,7 +54,7 @@ class Rtl(Log):
                 self.master.target_component,
                 b'WPNAV_ACCEL_Z',
                 int(vert_accel * 100),
-                mavutil.mavlink.MAV_PARAM_TYPE_REAL32
+                mavlink.MAV_PARAM_TYPE_REAL32
             )
 
             # Return altitude
@@ -63,7 +63,7 @@ class Rtl(Log):
                 self.master.target_component,
                 b'RTL_ALT',
                 int(rtl_alt * 100),
-                mavutil.mavlink.MAV_PARAM_TYPE_REAL32
+                mavlink.MAV_PARAM_TYPE_REAL32
             )
 
             return True
@@ -79,7 +79,7 @@ class Rtl(Log):
 
             self.master.mav.set_mode_send(
                 self.master.target_system,
-                mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
+                mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
                 6  # RTL
             )
 
@@ -101,7 +101,7 @@ class Rtl(Log):
 
             self.master.mav.set_mode_send(
                 self.master.target_system,
-                mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
+                mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
                 21  # SMART_RTL
             )
 
@@ -148,5 +148,5 @@ class Rtl(Log):
         if heartbeat is None:
             raise CopterError("Failed to get status: heartbeat not received")
 
-        armed = (heartbeat.base_mode & mavutil.mavlink.MAV_MODE_FLAG_SAFETY_ARMED) != 0
+        armed = (heartbeat.base_mode & mavlink.MAV_MODE_FLAG_SAFETY_ARMED) != 0
         return armed

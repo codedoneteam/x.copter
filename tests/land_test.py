@@ -13,7 +13,7 @@ class TestLand(unittest.IsolatedAsyncioTestCase):
         self.land.master.mav = Mock()
 
     async def test_land_success(self):
-        from pymavlink import mavutil
+        from src.xcopter.mavlink import mavlink
 
         result = await self.land.land(descend=2, land=0.5)
 
@@ -23,14 +23,14 @@ class TestLand(unittest.IsolatedAsyncioTestCase):
             self.land.master.target_component,
             b"WPNAV_SPEED_DN",
             200,
-            mavutil.mavlink.MAV_PARAM_TYPE_REAL32,
+            mavlink.MAV_PARAM_TYPE_REAL32,
         )
         self.land.master.mav.param_set_send.assert_any_call(
             self.land.master.target_system,
             self.land.master.target_component,
             b"LAND_SPEED",
             50,
-            mavutil.mavlink.MAV_PARAM_TYPE_REAL32,
+            mavlink.MAV_PARAM_TYPE_REAL32,
         )
         self.land.master.mav.set_mode_send.assert_called_once()
 

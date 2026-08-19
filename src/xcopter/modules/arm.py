@@ -1,5 +1,5 @@
-from pymavlink import mavutil
 import asyncio
+from ..mavlink import mavlink
 from .log import Log
 from .errors.error import CopterError
 
@@ -16,7 +16,7 @@ class Arming(Log):
             if heartbeat is None:
                 raise CopterError("Failed to get status: heartbeat not received")
 
-            armed = (heartbeat.base_mode & mavutil.mavlink.MAV_MODE_FLAG_SAFETY_ARMED) != 0
+            armed = (heartbeat.base_mode & mavlink.MAV_MODE_FLAG_SAFETY_ARMED) != 0
             return armed  
         except Exception as e:
             self.error(f"Exception while getting arming status: {e}")
@@ -30,7 +30,7 @@ class Arming(Log):
                 self.master.mav.command_long_send(
                     self.master.target_system,
                     self.master.target_component,
-                    mavutil.mavlink.MAV_CMD_COMPONENT_ARM_DISARM,
+                    mavlink.MAV_CMD_COMPONENT_ARM_DISARM,
                     0,
                     1,  # arm
                     0, 0, 0, 0, 0, 0
@@ -42,7 +42,7 @@ class Arming(Log):
                 if ack is None:
                     raise CopterError("ACK not received")
 
-                if ack.result == mavutil.mavlink.MAV_RESULT_ACCEPTED:
+                if ack.result == mavlink.MAV_RESULT_ACCEPTED:
                     self.info("Copter armed successfully (ARM)")
                     return True
                 else:
@@ -63,7 +63,7 @@ class Arming(Log):
                 self.master.mav.command_long_send(
                     self.master.target_system,
                     self.master.target_component,
-                    mavutil.mavlink.MAV_CMD_COMPONENT_ARM_DISARM,
+                    mavlink.MAV_CMD_COMPONENT_ARM_DISARM,
                     0,
                     0,  # 1 = arm, 0 = disarm
                     force_code,
@@ -73,7 +73,7 @@ class Arming(Log):
                 self.info("FORCE DISARM command sent" if force else "DISARM command sent")
 
                 ack = await asyncio.to_thread(self.master.recv_match, type='COMMAND_ACK', blocking=True, timeout=timeout)
-                if ack.result == mavutil.mavlink.MAV_RESULT_ACCEPTED:
+                if ack.result == mavlink.MAV_RESULT_ACCEPTED:
                     self.info("Copter disarmed successfully (DISARM)")
                     return True
                 else:

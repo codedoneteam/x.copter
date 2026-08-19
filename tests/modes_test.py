@@ -55,7 +55,7 @@ class TestModes(unittest.IsolatedAsyncioTestCase):
         mock_heartbeat.custom_mode = 0
         self.modes.master.recv_match.return_value = mock_heartbeat
 
-        with patch("src.xcopter.modules.modes.mavutil.mode_string_v10", return_value="STABILIZE"):
+        with patch("src.xcopter.modules.modes.mode_string_v10", return_value="STABILIZE"):
             result = await self.modes.mode()
 
         self.assertEqual(result, "STABILIZE")
@@ -74,7 +74,7 @@ class TestModes(unittest.IsolatedAsyncioTestCase):
         mock_heartbeat.custom_mode = 2
         self.modes.master.recv_match.return_value = mock_heartbeat
 
-        with patch("src.xcopter.modules.modes.mavutil.mode_string_v10", side_effect=RuntimeError("fail")):
+        with patch("src.xcopter.modules.modes.mode_string_v10", side_effect=RuntimeError("fail")):
             result = await self.modes.mode()
 
         self.assertEqual(result, "base_mode=209, custom_mode=2")

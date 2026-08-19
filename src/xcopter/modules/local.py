@@ -1,7 +1,7 @@
-from pymavlink import mavutil
 import asyncio
 import time
 import math
+from ..mavlink import mavlink
 from .log import Log
 from .errors.error import CopterError
 
@@ -43,7 +43,7 @@ class Local(Log):
                 self.master.target_component,
                 b'WPNAV_SPEED',
                 float(speed_cm),
-                mavutil.mavlink.MAV_PARAM_TYPE_REAL32
+                mavlink.MAV_PARAM_TYPE_REAL32
             )
             self.info(f"Speed set: {speed} m/s")
 
@@ -72,7 +72,7 @@ class Local(Log):
                     0,
                     self.master.target_system,
                     self.master.target_component,
-                    mavutil.mavlink.MAV_FRAME_BODY_NED,
+                    mavlink.MAV_FRAME_BODY_NED,
                     0b0000111111111000,  # position only
                     x, y, z,
                     0, 0, 0,
@@ -115,7 +115,7 @@ class Local(Log):
                     0,
                     self.master.target_system,
                     self.master.target_component,
-                    mavutil.mavlink.MAV_FRAME_LOCAL_NED,
+                    mavlink.MAV_FRAME_LOCAL_NED,
                     0b0000111111000111,  # use velocity only
                     0, 0, 0,
                     0, 0, 0,

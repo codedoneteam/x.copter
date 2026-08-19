@@ -1,6 +1,5 @@
-from pymavlink.dialects.v20 import common as mavlink2
 from .xcopter import XCopter
-from pymavlink import mavutil
+from .mavlink import mavlink, mavlink_connection
 from .modules.arm import Arming
 from .modules.gps import Gps
 from .modules.modes import Modes
@@ -30,7 +29,7 @@ class XArduCopter(Arming, Modes, Takeoff, Heading, Gps, Buzzer, Local, Rotate, L
     async def connect(self, connection_string, baud=115200, source_system=255, source_component=0, gcs=False):
         system = 255 if gcs else source_system
 
-        master = mavutil.mavlink_connection(
+        master = mavlink_connection(
             connection_string,
             baud=baud,
             source_system=system,
@@ -50,8 +49,8 @@ class XArduCopter(Arming, Modes, Takeoff, Heading, Gps, Buzzer, Local, Rotate, L
         try:
             while self.master:
                 self.master.mav.heartbeat_send(
-                    mavlink2.MAV_TYPE_GCS,
-                    mavlink2.MAV_AUTOPILOT_INVALID,
+                    mavlink.MAV_TYPE_GCS,
+                    mavlink.MAV_AUTOPILOT_INVALID,
                     0, 0, 0
                 )
                 await asyncio.sleep(0.25)

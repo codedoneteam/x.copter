@@ -1,7 +1,7 @@
-from pymavlink import mavutil
 import math
 import time
 import asyncio
+from ..mavlink import mavlink
 from .log import Log
 from .errors.error import CopterError
 
@@ -33,7 +33,7 @@ class Rotate(Log):
             self.master.mav.command_long_send(
                 self.master.target_system,
                 self.master.target_component,
-                mavutil.mavlink.MAV_CMD_CONDITION_YAW,
+                mavlink.MAV_CMD_CONDITION_YAW,
                 0,
                 abs(angle),
                 abs(rate),

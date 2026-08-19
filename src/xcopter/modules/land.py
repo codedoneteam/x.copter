@@ -1,4 +1,4 @@
-from pymavlink import mavutil
+from ..mavlink import mavlink
 from .log import Log
 from .errors.error import CopterError
 
@@ -15,7 +15,7 @@ class Land(Log):
                 self.master.target_component,
                 b'WPNAV_SPEED_DN',
                 int(descend * 100),
-                mavutil.mavlink.MAV_PARAM_TYPE_REAL32
+                mavlink.MAV_PARAM_TYPE_REAL32
             )
 
             # Final landing speed
@@ -24,12 +24,12 @@ class Land(Log):
                 self.master.target_component,
                 b'LAND_SPEED',
                 int(land * 100),
-                mavutil.mavlink.MAV_PARAM_TYPE_REAL32
+                mavlink.MAV_PARAM_TYPE_REAL32
             )
 
             self.master.mav.set_mode_send(
                 self.master.target_system,
-                mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
+                mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
                 9  # LAND
             )
 

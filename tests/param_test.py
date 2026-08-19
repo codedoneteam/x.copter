@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import ANY, Mock
 
-from pymavlink import mavutil
+from src.xcopter.mavlink import mavlink
 
 from src.xcopter.modules import Params
 from src.xcopter.modules.errors.error import CopterError
@@ -88,7 +88,7 @@ class TestParams(unittest.IsolatedAsyncioTestCase):
             self.params.master.target_component,
             b"WPNAV_SPEED",
             700.0,
-            mavutil.mavlink.MAV_PARAM_TYPE_REAL32,
+            mavlink.MAV_PARAM_TYPE_REAL32,
         )
 
     async def test_write_accepts_param_type(self):
@@ -100,7 +100,7 @@ class TestParams(unittest.IsolatedAsyncioTestCase):
         result = await self.params.write(
             "LAND_SPEED",
             75,
-            param_type=mavutil.mavlink.MAV_PARAM_TYPE_INT32,
+            param_type=mavlink.MAV_PARAM_TYPE_INT32,
         )
 
         self.assertEqual(result, 75)
@@ -109,7 +109,7 @@ class TestParams(unittest.IsolatedAsyncioTestCase):
             self.params.master.target_component,
             b"LAND_SPEED",
             75,
-            mavutil.mavlink.MAV_PARAM_TYPE_INT32,
+            mavlink.MAV_PARAM_TYPE_INT32,
         )
 
     async def test_write_timeout(self):
@@ -124,7 +124,7 @@ class TestParams(unittest.IsolatedAsyncioTestCase):
             self.params.master.target_component,
             b"WPNAV_SPEED",
             700.0,
-            mavutil.mavlink.MAV_PARAM_TYPE_REAL32,
+            mavlink.MAV_PARAM_TYPE_REAL32,
         )
 
     async def test_param_name_empty(self):

@@ -1,6 +1,6 @@
 import asyncio
 
-from pymavlink import mavutil
+from ..mavlink import mavlink, mode_string_v10
 from .log import Log
 from .errors.error import CopterError
 
@@ -23,10 +23,10 @@ class Modes(Log):
             if ack is None:
                 raise CopterError("Mode change failed: no response received")
 
-            if getattr(ack, "command", mavutil.mavlink.MAV_CMD_DO_SET_MODE) != mavutil.mavlink.MAV_CMD_DO_SET_MODE:
+            if getattr(ack, "command", mavlink.MAV_CMD_DO_SET_MODE) != mavlink.MAV_CMD_DO_SET_MODE:
                 raise CopterError(f"Mode change failed: unexpected ACK command {getattr(ack, 'command', None)}")
 
-            if getattr(ack, "result", None) != mavutil.mavlink.MAV_RESULT_ACCEPTED:
+            if getattr(ack, "result", None) != mavlink.MAV_RESULT_ACCEPTED:
                 raise CopterError(f"Mode change failed, code: {getattr(ack, 'result', None)}")
 
             return True
@@ -60,7 +60,7 @@ class Modes(Log):
             custom_mode = heartbeat.custom_mode
 
             try:
-                mode_name = mavutil.mode_string_v10(heartbeat)
+                mode_name = mode_string_v10(heartbeat)
             except Exception:
                 mode_name = f"base_mode={base_mode}, custom_mode={custom_mode}"
 

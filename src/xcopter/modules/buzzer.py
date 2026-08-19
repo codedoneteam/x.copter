@@ -1,4 +1,4 @@
-from pymavlink import mavutil
+from ..mavlink import mavlink
 from .log import Log
 from .errors.error import CopterError
 
@@ -13,7 +13,7 @@ class Buzzer(Log):
             self.master.mav.command_long_send(
                 self.master.target_system,
                 self.master.target_component,
-                mavutil.mavlink.MAV_CMD_DO_BUZZER,
+                mavlink.MAV_CMD_DO_BUZZER,
                 0,          # confirmation
                 1,          # Param1: enable
                 tone,       # Param2: frequency (Hz)

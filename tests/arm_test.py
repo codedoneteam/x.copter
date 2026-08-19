@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import Mock, patch
-from pymavlink import mavutil
+from src.xcopter.mavlink import mavlink
 from src.xcopter.modules import Arming
 from src.xcopter.modules.errors.error import CopterError
 
@@ -12,7 +12,7 @@ class TestArming(unittest.IsolatedAsyncioTestCase):
 
     async def test_armed_success(self):
         heartbeat = Mock()
-        heartbeat.base_mode = mavutil.mavlink.MAV_MODE_FLAG_SAFETY_ARMED
+        heartbeat.base_mode = mavlink.MAV_MODE_FLAG_SAFETY_ARMED
         self.arming.master.recv_match.return_value = heartbeat
 
         result = await self.arming.armed()
@@ -40,7 +40,7 @@ class TestArming(unittest.IsolatedAsyncioTestCase):
         heartbeat = Mock()
         heartbeat.base_mode = 0
         ack = Mock()
-        ack.result = mavutil.mavlink.MAV_RESULT_ACCEPTED
+        ack.result = mavlink.MAV_RESULT_ACCEPTED
         self.arming.master.recv_match.side_effect = [heartbeat, ack]
         self.arming.master.target_system = 1
         self.arming.master.target_component = 1
@@ -55,7 +55,7 @@ class TestArming(unittest.IsolatedAsyncioTestCase):
         heartbeat = Mock()
         heartbeat.base_mode = 0
         ack = Mock()
-        ack.result = mavutil.mavlink.MAV_RESULT_FAILED
+        ack.result = mavlink.MAV_RESULT_FAILED
         self.arming.master.recv_match.side_effect = [heartbeat, ack]
         self.arming.master.target_system = 1
         self.arming.master.target_component = 1
@@ -68,7 +68,7 @@ class TestArming(unittest.IsolatedAsyncioTestCase):
 
     async def test_disarm_success(self):
         ack = Mock()
-        ack.result = mavutil.mavlink.MAV_RESULT_ACCEPTED
+        ack.result = mavlink.MAV_RESULT_ACCEPTED
         self.arming.master.recv_match.return_value = ack
         self.arming.master.target_system = 1
         self.arming.master.target_component = 1
@@ -79,7 +79,7 @@ class TestArming(unittest.IsolatedAsyncioTestCase):
         self.arming.master.mav.command_long_send.assert_called_once_with(
             self.arming.master.target_system,
             self.arming.master.target_component,
-            mavutil.mavlink.MAV_CMD_COMPONENT_ARM_DISARM,
+            mavlink.MAV_CMD_COMPONENT_ARM_DISARM,
             0,
             0,
             Arming.FORCE_ARM_DISARM_CODE,
@@ -92,9 +92,9 @@ class TestArming(unittest.IsolatedAsyncioTestCase):
 
     async def test_regular_disarm_success(self):
         heartbeat = Mock()
-        heartbeat.base_mode = mavutil.mavlink.MAV_MODE_FLAG_SAFETY_ARMED
+        heartbeat.base_mode = mavlink.MAV_MODE_FLAG_SAFETY_ARMED
         ack = Mock()
-        ack.result = mavutil.mavlink.MAV_RESULT_ACCEPTED
+        ack.result = mavlink.MAV_RESULT_ACCEPTED
         self.arming.master.recv_match.side_effect = [heartbeat, ack]
         self.arming.master.target_system = 1
         self.arming.master.target_component = 1
@@ -105,7 +105,7 @@ class TestArming(unittest.IsolatedAsyncioTestCase):
         self.arming.master.mav.command_long_send.assert_called_once_with(
             self.arming.master.target_system,
             self.arming.master.target_component,
-            mavutil.mavlink.MAV_CMD_COMPONENT_ARM_DISARM,
+            mavlink.MAV_CMD_COMPONENT_ARM_DISARM,
             0,
             0,
             0,
@@ -118,7 +118,7 @@ class TestArming(unittest.IsolatedAsyncioTestCase):
 
     async def test_force_disarm_success(self):
         ack = Mock()
-        ack.result = mavutil.mavlink.MAV_RESULT_ACCEPTED
+        ack.result = mavlink.MAV_RESULT_ACCEPTED
         self.arming.master.recv_match.return_value = ack
         self.arming.master.target_system = 1
         self.arming.master.target_component = 1
@@ -129,7 +129,7 @@ class TestArming(unittest.IsolatedAsyncioTestCase):
         self.arming.master.mav.command_long_send.assert_called_once_with(
             self.arming.master.target_system,
             self.arming.master.target_component,
-            mavutil.mavlink.MAV_CMD_COMPONENT_ARM_DISARM,
+            mavlink.MAV_CMD_COMPONENT_ARM_DISARM,
             0,
             0,
             Arming.FORCE_ARM_DISARM_CODE,
@@ -142,7 +142,7 @@ class TestArming(unittest.IsolatedAsyncioTestCase):
 
     async def test_disarm_failed(self):
         ack = Mock()
-        ack.result = mavutil.mavlink.MAV_RESULT_FAILED
+        ack.result = mavlink.MAV_RESULT_FAILED
         self.arming.master.recv_match.return_value = ack
         self.arming.master.target_system = 1
         self.arming.master.target_component = 1

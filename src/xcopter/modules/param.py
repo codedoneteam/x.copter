@@ -1,7 +1,7 @@
 import asyncio
 import time
 
-from pymavlink import mavutil
+from ..mavlink import mavlink
 
 from .errors.error import CopterError
 from .log import Log
@@ -31,7 +31,7 @@ class Params(Log):
             self.error(f"Exception while reading parameter {param}: {e}")
             raise CopterError(f"Exception while reading parameter {param}: {e}") from e
 
-    async def write(self, param, value, param_type=mavutil.mavlink.MAV_PARAM_TYPE_REAL32, timeout=5):
+    async def write(self, param, value, param_type=mavlink.MAV_PARAM_TYPE_REAL32, timeout=5):
         try:
             param_id = self._encode_param_id(param)
             self.master.mav.param_set_send(

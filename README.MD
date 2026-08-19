@@ -20,7 +20,8 @@
 pip install .
 ```
 
-Зависимости указаны в `pyproject.toml`: `pymavlink`, `fastcrc`, `lxml`.
+Внешние MAVLink-зависимости не требуются: разбор и сборка используемых
+MAVLink-сообщений реализованы внутри пакета на стандартной библиотеке Python.
 
 ## Быстрый пример
 
@@ -291,7 +292,9 @@ asyncio.run(main())
 
 Открывает MAVLink-соединение и ожидает первый heartbeat.
 
-- `connection_string` - строка подключения `pymavlink`, например `udp:127.0.0.1:14550`.
+- `connection_string` - строка подключения, например `udp:127.0.0.1:14550`,
+  `udpin:0.0.0.0:14550`, `udpout:127.0.0.1:14550`, `tcp:127.0.0.1:5760`
+  или путь serial-устройства.
 - `baud` - скорость serial-соединения.
 - `source_system` - MAVLink system id отправителя.
 - `source_component` - MAVLink component id отправителя.

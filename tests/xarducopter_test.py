@@ -16,7 +16,7 @@ class TestXArduCopter(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(copter.epsilon, 0.05)
         self.assertIsNone(copter._heartbeat_task)
 
-    @patch("pymavlink.mavutil.mavlink_connection")
+    @patch("src.xcopter.xarducopter.mavlink_connection")
     async def test_connect(self, mock_mavlink_connection):
         mock_master = Mock()
         mock_master.wait_heartbeat = Mock()
@@ -37,7 +37,7 @@ class TestXArduCopter(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(copter.master, mock_master)
         self.assertEqual(copter.start_time, 123.0)
 
-    @patch("pymavlink.mavutil.mavlink_connection")
+    @patch("src.xcopter.xarducopter.mavlink_connection")
     async def test_connect_accepts_positional_baud(self, mock_mavlink_connection):
         mock_master = Mock()
         mock_master.wait_heartbeat = Mock()
@@ -55,7 +55,7 @@ class TestXArduCopter(unittest.IsolatedAsyncioTestCase):
         )
 
     @patch("src.xcopter.xarducopter.asyncio.create_task")
-    @patch("pymavlink.mavutil.mavlink_connection")
+    @patch("src.xcopter.xarducopter.mavlink_connection")
     async def test_connect_gcs_starts_heartbeat_task(self, mock_mavlink_connection, mock_create_task):
         mock_master = Mock()
         mock_master.wait_heartbeat = Mock()

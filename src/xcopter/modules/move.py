@@ -1,6 +1,6 @@
-from pymavlink import mavutil
 import time
 import asyncio
+from ..mavlink import mavlink
 from .log import Log
 from .errors.error import CopterError
 
@@ -63,7 +63,7 @@ class Move(Log):
                 0,
                 self.master.target_system,
                 self.master.target_component,
-                mavutil.mavlink.MAV_FRAME_BODY_NED,  # control in the drone coordinate frame
+                mavlink.MAV_FRAME_BODY_NED,  # control in the drone coordinate frame
                 0b0000111111000111,  # ignore position, send velocity and yaw_rate
                 0, 0, 0,             # x, y, z positions
                 vx, vy, vz,          # velocities

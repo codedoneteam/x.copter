@@ -1,8 +1,8 @@
 import unittest
 from unittest.mock import Mock, patch
+from src.xcopter.mavlink import mavlink
 from src.xcopter.modules import Rtl
 from src.xcopter.modules.errors.error import CopterError
-from pymavlink import mavutil
 
 class TestRtl(unittest.IsolatedAsyncioTestCase):
     def setUp(self):
@@ -25,7 +25,7 @@ class TestRtl(unittest.IsolatedAsyncioTestCase):
 
     async def test_rtl_retries_transient_heartbeat_timeout(self):
         armed_heartbeat = Mock()
-        armed_heartbeat.base_mode = mavutil.mavlink.MAV_MODE_FLAG_SAFETY_ARMED
+        armed_heartbeat.base_mode = mavlink.MAV_MODE_FLAG_SAFETY_ARMED
         disarmed_heartbeat = Mock()
         disarmed_heartbeat.base_mode = 0
         self.rtl.master.recv_match.side_effect = [armed_heartbeat, None, disarmed_heartbeat]

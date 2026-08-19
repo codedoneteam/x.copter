@@ -1,7 +1,7 @@
 import math
 import time
-from pymavlink import mavutil
 import asyncio
+from ..mavlink import mavlink
 from .log import Log
 from .errors.error import CopterError
 
@@ -51,7 +51,7 @@ class Gps(Log):
                 self.master.target_component,
                 b'WPNAV_SPEED',
                 float(speed_cm),
-                mavutil.mavlink.MAV_PARAM_TYPE_REAL32
+                mavlink.MAV_PARAM_TYPE_REAL32
             )
             self.info(f"Speed set: {speed} m/s")
 
@@ -70,7 +70,7 @@ class Gps(Log):
                     int((time.time() - self.start_time) * 1000),
                     self.master.target_system,
                     self.master.target_component,
-                    mavutil.mavlink.MAV_FRAME_GLOBAL,
+                    mavlink.MAV_FRAME_GLOBAL,
                     type_mask,
                     lat_int,
                     lon_int,

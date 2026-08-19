@@ -1,5 +1,5 @@
 import logging
-from pymavlink import mavutil
+from ..mavlink import mavlink
 
 class Log:
     def __init__(self):
@@ -7,23 +7,23 @@ class Log:
 
     def debug(self, msg):
         logging.debug(msg)
-        self._send_statustext(mavutil.mavlink.MAV_SEVERITY_DEBUG, msg)
+        self._send_statustext(mavlink.MAV_SEVERITY_DEBUG, msg)
 
     def info(self, msg):
         logging.info(msg)
-        self._send_statustext(mavutil.mavlink.MAV_SEVERITY_INFO, msg)
+        self._send_statustext(mavlink.MAV_SEVERITY_INFO, msg)
 
     def warn(self, msg):
         logging.warning(msg)
-        self._send_statustext(mavutil.mavlink.MAV_SEVERITY_WARNING, msg)
+        self._send_statustext(mavlink.MAV_SEVERITY_WARNING, msg)
 
     def error(self, msg):
         logging.error(msg)
-        self._send_statustext(mavutil.mavlink.MAV_SEVERITY_ERROR, msg)
+        self._send_statustext(mavlink.MAV_SEVERITY_ERROR, msg)
 
     def critical(self, msg):
         logging.critical(msg)
-        self._send_statustext(mavutil.mavlink.MAV_SEVERITY_CRITICAL, msg)
+        self._send_statustext(mavlink.MAV_SEVERITY_CRITICAL, msg)
 
     def _send_statustext(self, severity, msg):
         master = getattr(self, "master", None)

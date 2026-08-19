@@ -1,7 +1,7 @@
 import asyncio
 
-from pymavlink import mavutil
 import time
+from ..mavlink import mavlink
 from .log import Log
 from .errors.error import CopterError
 
@@ -27,7 +27,7 @@ class Takeoff(Log):
                 self.master.target_component,
                 b'WPNAV_SPEED',
                 int(speed * 100),
-                mavutil.mavlink.MAV_PARAM_TYPE_REAL32
+                mavlink.MAV_PARAM_TYPE_REAL32
             )
 
             self.master.mav.param_set_send(
@@ -35,7 +35,7 @@ class Takeoff(Log):
                     self.master.target_component,
                     b'WPNAV_SPEED_UP',
                     int(speed * 100),
-                    mavutil.mavlink.MAV_PARAM_TYPE_REAL32
+                    mavlink.MAV_PARAM_TYPE_REAL32
             )
 
             self.master.mav.param_set_send(
@@ -43,7 +43,7 @@ class Takeoff(Log):
                 self.master.target_component,
                 b'WPNAV_ACCEL_Z',
                 int(vert_accel * 100),
-                mavutil.mavlink.MAV_PARAM_TYPE_REAL32
+                mavlink.MAV_PARAM_TYPE_REAL32
             )           
             return True
 
@@ -53,7 +53,7 @@ class Takeoff(Log):
             self.master.mav.command_long_send(
                 self.master.target_system,
                 self.master.target_component,
-                mavutil.mavlink.MAV_CMD_NAV_TAKEOFF,
+                mavlink.MAV_CMD_NAV_TAKEOFF,
                 0,
                 0, 0, 0, 0,
                 0, 0,
