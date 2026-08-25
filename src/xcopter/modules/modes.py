@@ -16,7 +16,15 @@ class Modes(Log):
             if mode_id is None:
                 raise CopterError(f"Error: mode '{mode}' not found in mode mapping")
 
-            self.master.set_mode(mode_id)
+            self.master.mav.command_long_send(
+                self.master.target_system,
+                self.master.target_component,
+                mavlink.MAV_CMD_DO_SET_MODE,
+                0,
+                mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
+                mode_id,
+                0, 0, 0, 0, 0
+            )
             self.info(f"Mode change command sent: {mode}")
 
             ack = await asyncio.to_thread(self.master.recv_match, type='COMMAND_ACK', blocking=True, timeout=timeout)

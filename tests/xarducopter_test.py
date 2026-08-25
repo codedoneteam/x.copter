@@ -25,10 +25,10 @@ class TestXArduCopter(unittest.IsolatedAsyncioTestCase):
         copter = XArduCopter()
 
         with patch("src.xcopter.xarducopter.time.time", return_value=123.0):
-            await copter.connect("test_conn")
+            await copter.connect("udp:127.0.0.1:14550")
 
         mock_mavlink_connection.assert_called_once_with(
-            "test_conn",
+            "udp:127.0.0.1:14550",
             baud=115200,
             source_system=255,
             source_component=0,
@@ -45,14 +45,40 @@ class TestXArduCopter(unittest.IsolatedAsyncioTestCase):
 
         copter = XArduCopter()
 
-        await copter.connect("test_conn", 57600)
+        await copter.connect("tcp:127.0.0.1:5760", 57600)
 
         mock_mavlink_connection.assert_called_once_with(
-            "test_conn",
+            "tcp:127.0.0.1:5760",
             baud=57600,
             source_system=255,
             source_component=0,
         )
+
+    @patch("src.xcopter.xarducopter.mavlink_connection")
+    async def test_connect_accepts_uart_connection(self, mock_mavlink_connection):
+        mock_master = Mock()
+        mock_master.wait_heartbeat = Mock()
+        mock_mavlink_connection.return_value = mock_master
+
+        copter = XArduCopter()
+
+        await copter.connect("uart:/dev/ttyUSB0", 57600)
+
+        mock_mavlink_connection.assert_called_once_with(
+            "/dev/ttyUSB0",
+            baud=57600,
+            source_system=255,
+            source_component=0,
+        )
+
+    @patch("src.xcopter.xarducopter.mavlink_connection")
+    async def test_connect_rejects_unsupported_connection_type(self, mock_mavlink_connection):
+        copter = XArduCopter()
+
+        with self.assertRaisesRegex(ValueError, "Supported types: UDP, TCP, UART"):
+            await copter.connect("serial:/dev/ttyUSB0")
+
+        mock_mavlink_connection.assert_not_called()
 
     @patch("src.xcopter.xarducopter.asyncio.create_task")
     @patch("src.xcopter.xarducopter.mavlink_connection")
@@ -65,10 +91,10 @@ class TestXArduCopter(unittest.IsolatedAsyncioTestCase):
 
         copter = XArduCopter()
 
-        await copter.connect("test_conn", gcs=True, source_system=42)
+        await copter.connect("udpout:127.0.0.1:14550", gcs=True, source_system=42)
 
         mock_mavlink_connection.assert_called_once_with(
-            "test_conn",
+            "udpout:127.0.0.1:14550",
             baud=115200,
             source_system=255,
             source_component=0,

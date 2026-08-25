@@ -47,7 +47,15 @@ class TestModes(unittest.IsolatedAsyncioTestCase):
         result = await self.modes.guide()
 
         self.assertTrue(result)
-        self.modes.master.set_mode.assert_called_once_with(4)
+        self.modes.master.mav.command_long_send.assert_called_once_with(
+            self.modes.master.target_system,
+            self.modes.master.target_component,
+            176,
+            0,
+            1,
+            4,
+            0, 0, 0, 0, 0
+        )
 
     async def test_mode_success(self):
         mock_heartbeat = Mock()
@@ -87,7 +95,15 @@ class TestModes(unittest.IsolatedAsyncioTestCase):
             await self.modes.guide()
 
         self.assertEqual(str(ctx.exception), "Mode change failed: no response received")
-        self.modes.master.set_mode.assert_called_once_with(4)
+        self.modes.master.mav.command_long_send.assert_called_once_with(
+            self.modes.master.target_system,
+            self.modes.master.target_component,
+            176,
+            0,
+            1,
+            4,
+            0, 0, 0, 0, 0
+        )
 
 
 if __name__ == "__main__":

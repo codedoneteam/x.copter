@@ -1,10 +1,13 @@
+import asyncio
 import unittest
 import logging
 from xcopter import XArduCopter
 
-takeoff_height = 3
+
 connection_string = "udp:127.0.0.1:14550"
+# connection_string = "uart:/dev/ttyUSB0"
 baud = 115200
+takeoff_height = 3
 
 async def fly(copter):
     try:
@@ -25,6 +28,8 @@ async def mission(copter):
     await copter.guide()
 
     await copter.arm()
+
+    await asyncio.sleep(10)
 
     await copter.takeoff(takeoff_height, speed=0.5)
     copter.info(f"Current altitude: {await copter.height()} meters. Absolute altitude: {await copter.altitude()} meters")

@@ -294,8 +294,8 @@ asyncio.run(main())
 
 - `connection_string` - строка подключения, например `udp:127.0.0.1:14550`,
   `udpin:0.0.0.0:14550`, `udpout:127.0.0.1:14550`, `tcp:127.0.0.1:5760`
-  или путь serial-устройства.
-- `baud` - скорость serial-соединения.
+  или `uart:/dev/ttyUSB0`.
+- `baud` - скорость UART-соединения.
 - `source_system` - MAVLink system id отправителя.
 - `source_component` - MAVLink component id отправителя.
 - `gcs` - если `True`, соединение работает как GCS и запускает фоновую отправку heartbeat.

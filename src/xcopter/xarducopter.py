@@ -19,6 +19,35 @@ import asyncio
 import logging
 from contextlib import suppress
 
+_CONNECTION_PREFIXES = (
+    "udp:",
+    "udpin:",
+    "udpout:",
+    "tcp:",
+    "tcpin:",
+    "tcpout:",
+)
+
+
+def _normalize_connection_string(connection_string):
+    if not isinstance(connection_string, str) or not connection_string:
+        raise ValueError("connection_string must be a non-empty string")
+
+    if connection_string.startswith(_CONNECTION_PREFIXES):
+        return connection_string
+
+    if connection_string.startswith("uart:"):
+        device = connection_string.removeprefix("uart:")
+        if not device:
+            raise ValueError("UART connection string must include a device path")
+        return device
+
+    if ":" in connection_string:
+        raise ValueError("Unsupported connection type. Supported types: UDP, TCP, UART")
+
+    return connection_string
+
+
 class XArduCopter(Arming, Modes, Takeoff, Heading, Gps, Buzzer, Local, Rotate, Land, Rtl, Move, Battery, Params, Log, XCopter):
     def __init__(self):
         Log.__init__(self)
@@ -28,9 +57,10 @@ class XArduCopter(Arming, Modes, Takeoff, Heading, Gps, Buzzer, Local, Rotate, L
 
     async def connect(self, connection_string, baud=115200, source_system=255, source_component=0, gcs=False):
         system = 255 if gcs else source_system
+        normalized_connection_string = _normalize_connection_string(connection_string)
 
         master = mavlink_connection(
-            connection_string,
+            normalized_connection_string,
             baud=baud,
             source_system=system,
             source_component=source_component,
